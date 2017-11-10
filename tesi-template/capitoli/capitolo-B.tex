@@ -1,0 +1,40 @@
+% !TEX encoding = UTF-8
+% !TEX TS-program = pdflatex
+% !TEX root = ../tesi.tex
+% !TEX spellcheck = it-IT
+
+%**************************************************************
+\chapter{Funzioni standard per i \textit{plug-in}}
+\label{app:appb}
+%**************************************************************
+
+\begin{lstlisting}[language=C]
+S_PLUGIN_API const s_plugin_params *s_plugin_init(s_erc *error)
+{
+    S_CLR_ERR(error);
+
+    if (!s_lib_version_ok(SPCT_MAJOR_VERSION_MIN, SPCT_MINOR_VERSION_MIN))
+    {
+        S_CTX_ERR(error, S_FAILURE,
+                  SPCT_PLUGIN_INIT_STR,
+                  "Incorrect Speect Engine version, require at least '%d.%d.x'",
+                  SPCT_MAJOR_VERSION_MIN, SPCT_MINOR_VERSION_MIN);
+        return NULL;
+    }
+
+    return &plugin_params;
+}
+
+static void plugin_register_function(s_erc *error)
+{
+    S_CLR_ERR(error);
+
+    /* TODO: your plug-in register function */
+    /* register plug-in classes here with s_class_reg */
+
+    S_CHK_ERR(error, S_CONTERR,
+              SPCT_PLUGIN_REG_STR,
+              SPCT_PLUGIN_REG_FAIL_STR);
+}
+
+\end{lstlisting}

@@ -1,0 +1,158 @@
+% !TEX encoding = UTF-8
+% !TEX TS-program = pdflatex
+% !TEX root = ../tesi.tex
+% !TEX spellcheck = it-IT
+
+%**************************************************************
+\chapter{Introduzione}
+\label{cap:introduzione}
+%**************************************************************
+
+%Introduzione al contesto applicativo.\\
+
+%\noindent Esempio di utilizzo di un termine nel glossario \\
+%\gls{api}. \\
+
+%\noindent Esempio di citazione in linea \\
+%\cite{site:agile-manifesto}. \\
+
+%\noindent Esempio di citazione nel pie' di pagina \\
+%citazione\footcite{womak:lean-thinking} \\
+
+%**************************************************************
+\section{L'azienda e lo stage}
+
+\href{https://www.mivoq.it/}{Mivoq S.r.L.} è un'azienda operante nel settore delle tecnologie vocali, nata nel 2013 come
+\textit{spinoff} dell'\href{http://www.istc.cnr.it/it}{Istituto di Scienze e Tecnologie della Cognizione} del 
+\href{https://www.cnr.it/}{Consiglio Nazionale delle Ricerche}. L'azienda propone l'utilizzo delle tecnologie vocali per permettere a chiunque di creare e personalizzare la propria voce sintetica in breve tempo. \\
+
+%**************************************************************
+Lo \textit{stage} ha avuto una durata di due mesi per un totale di 320 ore, da maggio 2016 a luglio 2016.
+La politica aziendale non adotta orari fissi per i propri dipendenti, tuttavia ho sempre cercato di lavorare
+7-8 ore al giorno dal lunedì al venerdì per non superare i due mesi di tirocinio. \\ Ho avuto la possibilità di
+lavorare  sia nelle due sedi di Mivoq (Padova e Bassano del Grappa) sia a casa, ma in costante contatto
+con il \textit{tutor} aziendale Giulio Paci. \\ Sia io sia il \textit{tutor} abbiamo mantenuto costantemente aggiornati dei \textit{report}
+contenenti i \textit{task} assegnati e la descrizione del progresso nel loro svolgimento. 
+
+\begin{figure}[!h] 
+    		\centering 
+    		\includegraphics[width=0.5\columnwidth]{mivoq-logo} 
+   	 	\caption{Logo dell'azienda}
+\end{figure}
+
+\section{Descrizione generale di Speect e idea complessiva del progetto}
+\textbf{Speect} è una piattaforma di \textit{Text to Speech (TTS)} multilingua sviluppata dal gruppo 
+\href{http://www.meraka.org.za/humanLanguage.htm}{Human Language Technologies}
+del \href{http://www.csir.co.za/meraka/}{Meraka Institute}, in Sudafrica. \\ Le componenti base del sistema sono implementate in linguaggio \textit{C}, rispettando
+rigidamente le direttive dello \textit{standard} \href{http://www.dii.uchile.cl/~daespino/files/Iso_C_1999_definition.pdf}{ISO/IEC 9899:1990}; 
+\textbf{Speect} inoltre implementa il paradigma ad oggetti ed è \textit{multithreading}. \\ Il sistema è stato progettato in modo da essere facilmente estensibile
+tramite \textit{plug-in}: in particolare, tutti i processi di sintesi (dal \textit{Tokenizer} al \textit{Vocoder}, passando per il \textit{Phonemizer}) 
+sono implementati come \textit{plug-in}. \\ L'\textit{engine} di \textbf{Speect}
+si occupa invece della definizione dei tipi astratti e della comunicazione tra i vari \textit{plug-in}; esso implementa
+inoltre la struttura dati principale di \textbf{Speect}, l'\textit{Heterogeneous Relation Graph}, struttura continuamente
+modificata ed estesa dai \textit{plug-in} in esecuzione. \\
+Il \textit{plug-in} che si occupa del \hyperref[glo:postag]{\emph{Pos tagging}\glsfirstoccur} all'interno di \textbf{Speect}
+è un \textit{wrapper} di \href{https://github.com/mivoq/hunpos}{Hunpos} (al quale hanno lavorato i due tirocinanti
+precedenti), un'implementazione \textit{open source} di un algoritmo
+che utilizza il \href{https://en.wikipedia.org/wiki/Hidden_Markov_model}{Modello di Markov Nascosto}; \textit{Hunpos} è una 
+reimplementazione in linguaggio \hyperref[glo:ocam]{\emph{OCaml}\glsfirstoccur} di 
+\href{http://www.coli.uni-saarland.de/~thorsten/tnt/}{TnT}, un \textit{part-of-speech tagger} sviluppato da Thorsten Brants. \\
+
+Il progetto sviluppato in questo \textit{stage} si inquadra in un'attività di medio/lungo termine che consiste nella migrazione 
+del motore di sintesi utilizzato dall'azienda da una piattaforma \textit{Java} (\textbf{MaryTTS}) ad una \textit{C} (\textbf{Speect}). \\
+\textbf{MaryTTS} è un sistema scritto in \textit{Java}, fornisce dei buoni strumenti per l'analisi interna, tuttavia presenta i seguenti difetti:
+   \begin{itemize}
+        \item basse \textit{performance} dovute al linguaggio; 
+        \item molto codice duplicato e troppe dipendenze; 
+        \item struttura ad albero rigida per contenere le informazioni ricavate dal \textit{front-end}: ciò rende complicato
+              realizzare alcune analisi linguistiche;
+        \item difficoltà nel modificare il \textit{vocoder} mantenendo la compatibilità all'indietro;
+        \item carenza di librerie adeguate per \textit{Java} per effettuare il processamento audio;
+        \item struttura modulare rigida per le lingue e le voci;
+        \item \textit{iOS} non supporta \textit{Java}, e in futuro potrebbe essere interesse dell'azienda sviluppare per questa piattaforma.
+   \end{itemize}
+L'azienda prevede dunque di poter estendere \textbf{Speect} fino al momento in cui esso conterrà un sottoinsieme delle funzionalità
+di \textbf{MaryTTS}, con lo scopo di utilizzarlo come sistema di \textit{TTS} nei servizi e nei prodotti forniti da Mivoq. \\
+L'attività primaria dello \textit{stage} è stata dunque l'implementazione di alcuni passaggi di tale migrazione, tra cui il miglioramento
+di una voce sintetica in lingua italiana tramite l'estensione e la creazione di alcuni \textit{plug-in}. \\
+I due tirocinanti precedenti avevano sviluppato le componenti \textit{Tokenizer}, \textit{POS tagger} e \textit{trascrittore fonetico};
+inoltre essi avevano lavorato ad una \textit{suite} di \textit{tool} (principalmente \textit{script bash} e fogli \hyperref[glo:xsl]{\emph{XSL}\glsfirstoccur}) 
+per agevolare il confronto tra i due sistemi \textbf{MaryTTS} e \textbf{Speect}, \textit{suite} alla quale ho lavorato anche io per un
+ breve periodo (circa tre giorni) all'inizio dello \textit{stage} come introduzione al sistema. \\
+Prima del mio \textit{stage} la qualità della voce sintetica italiana era piuttosto bassa, principalmente a causa
+dei seguenti motivi:
+ \begin{itemize}
+   \item il testo in lingua italiana veniva sillabificato secondo le regole della lingua inglese
+         in quanto mancava il \textit{plug-in} specifico per l'italiano adatto a questo scopo;
+   \item molte \textit{feature} utili alla produzione dell'audio da parte del \textit{vocoder} non venivano calcolate
+         o raccolte propriamente, fornendo così al \textit{back-end} un numero insufficiente di informazioni sull'\textit{input}.
+ \end{itemize}
+Per quanto riguarda il metodo adottato nello sviluppo del progetto, l'assenza di documentazione (se non nei commenti al codice) 
+riguardante i \textit{plug-in} sviluppati dai tirocinanti precedenti (sui quali ho lavorato) ha reso necessari uno studio continuo del 
+codice sorgente e l'esecuzione di numerosi \textit{test} per comprendere il funzionamento del sistema. \\ 
+Ad ogni modo, in alcuni casi, l'interazione con il \textit{tutor} aziendale è stata
+indispensabile e fondamentale per la comprensione dei dettagli più ostici.
+
+
+%*************************************
+\section{Problematiche riscontrate}
+ \subsection{Documentazione di Speect}
+  La documentazione di \textbf{Speect} è piuttosto scarsa e contiene alcuni errori che possono confondere il principiante, inoltre
+  gli sviluppatori originali hanno abbandonato il progetto nel 2013, pertanto non esistono aggiornamenti alla documentazione da molto tempo.
+  Inoltre, effettuando delle ricerche tramite i principali \textit{search engine}, sembra evidente come \textbf{Speect} non abbia ricevuto molta attenzione
+  al di fuori dell'istituto nel quale è stato sviluppato (oltre a Mivoq ovviamente). \\ Pertanto non è stato possibile nemmeno 
+  rivolgersi a \textit{forum} o fonti di terze parti per la risoluzione di problemi anche banali (la tipica ricerca su 
+  \textit{Google} non restituiva risultati specifici). Per questo motivo la risoluzione di problemi anche banali
+  ha richiesto un numero di ore non irrilevante. \\
+  È inoltre notevole il fatto che la mancanza/scarsa qualità di documentazione a volte abbia reso necessaria l'analisi del codice sorgente 
+  interno all'\textit{engine} di \textbf{Speect}. \\
+  Visti i problemi citati sopra, nel corso dello \textit{stage} è stato ritenuto opportuno stilare una lista 
+  (condivisa con il \textit{tutor} aziendale) degli errori individuati nella documentazione.
+  
+%*************************************
+\section{Prodotto ottenuto}
+Tutto il lavoro svolto durante lo \textit{stage} è rientrato nel percorso tracciato dai due tirocinanti
+precedenti, i quali hanno sviluppato parte di un \textit{front-end} minimale per la lingua italiana per \textbf{Speect}.
+Il mio compito è stato dunque lo sviluppo di nuove funzionalità per tale \textit{front-end} allo scopo di 
+renderlo più maturo, ottenendo una voce in lingua italiana di qualità superiore.\\
+In particolare, le (macro)attività svolte durante il tirocinio sono state le seguenti:
+    \begin{itemize} 
+       \item miglioramento del \textit{plug-in} responsabile della scrittura in formato \textit{MaryXML}
+             dei dati interni all'\textit{HRG} di \textbf{Speect}; sono inoltre stati estesi i \textit{test} esistenti
+             per verificare il comportamento del \textit{plug-in} dopo le estensioni;
+       \item sviluppo di un sillabificatore completo per l'italiano e dei \textit{test} per 
+             verificarne il corretto funzionamento su un grande numero di possibili \textit{input};
+       \item analisi ed implementazione di alcune componenti per il calcolo 
+             delle \textit{feature} utili per il \textit{vocoder} (è stato cioè migliorato il passaggio
+             dei dati dal \textit{front-end} al \textit{back-end}). \\
+    \end{itemize}
+Dopo il termine del mio \textit{stage} l'azienda procederà con lo sviluppo di \textbf{Speect}, avendo come obiettivo
+un prodotto dotato di tutte le funzionalità di \textbf{MaryTTS} e in grado di sostituirlo per l'utilizzo aziendale. 
+
+
+%**************************************************************
+\newpage
+\section{Organizzazione del testo}
+
+\begin{description}
+    \item[{\hyperref[cap:analisi-requisiti]{Il secondo capitolo}}] presenta brevemente il sistema e descrive i requisiti del progetto;
+    
+    \item[{\hyperref[cap:speect]{Il terzo capitolo}}] descrive in profondità le componenti fondamentali del \textit{software} \textbf{Speect};
+    
+   % \item[{\hyperref[cap:analisi-requisiti]{Il quarto capitolo}}] approfondisce ...
+    
+    \item[{\hyperref[cap:progettazione-realizzazione]{Il quarto capitolo}}] descrive le scelte progettuali e di codifica, dal sillabificatore
+      per l'italiano ai \textit{plug-in} per il calcolo delle \textit{feature};
+    
+    \item[{\hyperref[cap:verifica-validazione]{Il quinto capitolo}}] descrive le attività di verifica e validazione svolte sulle
+      componenti prodotte durante lo \textit{stage};
+    
+    \item[{\hyperref[cap:conclusioni]{Il sesto capitolo}}] contiene alcune considerazioni finali sullo \textit{stage}.
+\end{description}
+
+Riguardo la stesura del testo, relativamente al documento sono state adottate le seguenti convenzioni tipografiche:
+\begin{itemize}
+	\item gli acronimi, le abbreviazioni e i termini ambigui o di uso non comune menzionati vengono definiti nel glossario, situato alla fine del presente documento;
+	\item per le occorrenze dei termini riportati nel glossario viene utilizzata la seguente nomenclatura: \emph{parola}\glsfirstoccur;
+	\item i termini in lingua straniera o facenti parti del gergo tecnico sono evidenziati con il carattere \emph{corsivo}.
+\end{itemize}

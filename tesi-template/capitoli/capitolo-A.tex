@@ -1,0 +1,92 @@
+% !TEX encoding = UTF-8
+% !TEX TS-program = pdflatex
+% !TEX root = ../tesi.tex
+% !TEX spellcheck = it-IT
+
+%**************************************************************
+\chapter{Esempio di test di unità}
+\label{app:unit-test}
+%**************************************************************
+
+\begin{lstlisting}[language=bash]
+#!/bin/sh
+
+set -e;
+
+echo 1..5
+
+PATH="$srcdir/"bin:"$PATH"
+
+TEST_NO=0
+
+test_start() {
+    TEST_NO=$((TEST_NO+1))
+    TEST_RES="not ok"
+    TEST_TITLE="$1"
+}
+
+test_end() {
+    if [ x"$1" = xSKIP ]
+    then
+	TEST_RES=ok
+	echo "$TEST_RES $TEST_NO - $TEST_TITLE # $1 $2"
+    else
+	echo "$TEST_RES $TEST_NO - $TEST_TITLE"
+    fi
+}
+
+test_start "token-maryxml_to_hunpos should support -h option"
+if token-maryxml_to_hunpos -h >/dev/null
+then
+    TEST_RES=ok
+fi
+test_end
+
+test_start "token-maryxml_to_hunpos should support -t tokens"
+ERRORS=0
+while read line;
+do
+    MYFILE=`echo "$line" | sed -e 's/\.[^.]\+\.maryxml$/.tokens.hunpos/g'`;
+    ASUM=`md5sum < "$MYFILE"`
+    BSUM=`token-maryxml_to_hunpos -t tokens < "$line" | md5sum`
+    if [ ! "$ASUM" = "$BSUM" ]
+    then
+	ERRORS=$((ERRORS+1))
+        echo "token-maryxml_to_hunpos -t tokens < \"$line\" # \"$MYFILE\"" >&2
+    fi
+done <<EOF
+`find "$srcdir"/test/data/ -name "*.maryxml"`
+EOF
+if [ $ERRORS = 0 ]
+then
+    TEST_RES=ok
+fi
+test_end
+
+test_start "token-maryxml_to_hunpos should support -t words"
+ERRORS=0
+while read line;
+do
+    MYFILE=`echo "$line" | sed -e 's/\.[^.]\+\.maryxml$/.words.hunpos/g'`;
+    ASUM=`md5sum < "$MYFILE"`
+    BSUM=`token-maryxml_to_hunpos -t words < "$line" | md5sum`
+    if [ ! "$ASUM" = "$BSUM" ]
+    then
+	ERRORS=$((ERRORS+1))
+        echo "token-maryxml_to_hunpos -t words < \"$line\" # \"$MYFILE\"" >&2
+    fi
+done <<EOF
+`find "$srcdir"/test/data/ -name "*.maryxml" | grep -v ".tokens.maryxml"`
+EOF
+if [ $ERRORS = 0 ]
+then
+    TEST_RES=ok
+fi
+test_end
+
+exit 0
+
+\end{lstlisting}
+
+
+

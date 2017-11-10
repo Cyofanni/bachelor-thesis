@@ -1,0 +1,117 @@
+% !TEX encoding = UTF-8
+% !TEX TS-program = pdflatex
+% !TEX root = ../tesi.tex
+% !TEX spellcheck = it-IT
+
+%**************************************************************
+\chapter{Verifica e validazione}
+\label{cap:verifica-validazione}
+%**************************************************************
+%input example for syll_test: k o n t a m i n a1 n d o LL i s i
+%output example for syll_text: k o n - t a - m i - n a1 n - d o - LL i - s i
+\section{Testing del sillabificatore}
+Il \textit{plug-in} di sillabificazione per l'italiano è stato associato fin dall'inizio della sua
+progettazione ad un programma di verifica scritto sempre in \textit{C}. \\
+ \subsection{Funzionamento del programma di test}
+  Questo programma (che per comodità chiameremo \texttt{syll\_test}) riceve in \textit{input} su \texttt{stdin}
+  (\textbf{st}andard \textbf{in}put) una sequenza di \textit{phoneme} rappresentante una parola per 
+  ciascuna riga (prima colonna della tabella 5.1). \\
+  Successivamente, dopo la lettura 
+  da \texttt{stdin}  di una singola riga, si occupa di invocare il \textit{plug-in} di sillabificazione prestabilito
+  all'interno del \textit{file} \texttt{voice.json}. \\ Infine, la lista di sillabe generata dal sillabificatore
+  viene stampata su \texttt{stdout} (\textbf{st}andard \textbf{out}put), utilizzando il carattere '\textbf{-}' come separatore per le sillabe 
+  (seconda colonna della   tabella 5.1). \\
+  Il \textit{test} \texttt{syll\_test} è stato realizzato prima del sillabificatore, pertanto inizialmente l'\textit{input}
+  è stato sillabificato utilizzando il sillabificatore per la lingua inglese. In questo modo è stato possibile accertare
+  che lo stesso \textit{test} fosse corretto e conforme alle aspettative. \\
+  Il \textit{tutor} aziendale mi ha fornito fin da subito due \textit{file}, rispettivamente di \textit{input} e 
+  di \textit{output}, contenenti circa mille esempi di sequenze di fonemi e delle sillabificazioni attese.  \\ 
+  Nella seguente tabella è possibile vedere alcuni esempi di \textit{input} (colonna di sinistra) e di
+  \textit{output} (colonna di destra).
+\begin{center}
+        \bgroup
+        \def\arraystretch{1.8}
+        \begin{longtable}{ | l | p{2cm} | p{4.7cm} | p{2.5cm} |}
+        \hline
+        \textbf{Esempio input} & \textbf{Esempio output atteso} \\ \hline
+        k a r o t a1 v a & k a - r o - t a1 - v a  \newline  \\ \hline
+        a rr o t O1 & a - rr o - t O1 \newline  \\ \hline
+        r i a1 nn o & r i - a1 - nn o \newline  \\ \hline
+        r a1 d i k a & r a1 - d i - k a     \newline  \\ \hline
+        s p O1 r t e & s p O1 r - t e   \newline  \\ \hline
+        r i p a r t i1 t e &  r i - p a r - t i1 - t e   \newline  \\ \hline
+        i n i m i k a1 t i & i - n i - m i - k a1 - t i   \newline  \\ \hline
+        g r E1 v i & g r E1 - v i     \newline  \\ \hline
+        \caption{Alcuni \textit{input} e \textit{output} attesi}
+        \end{longtable}
+        \egroup
+     \end{center}
+    %END of table
+   \paragraph{Eccezioni nell'algoritmo di sillabificazione rilevate grazie a syll\_test}
+       Nella seguente tabella vengono riportati alcuni risultati ricavati da \texttt{syll\_test}
+       utili per una corretta implementazione dell'algoritmo di sillabificazione implementato 
+       durante lo \textit{stage}. \\
+       Le differenze tra le colonne 'Output' e 'Output atteso' hanno permesso di formulare
+       le eccezioni dell'algoritmo di \textit{sillabificazione per sonorità} riportate nel
+       {\hyperref[sec:progettazione]{quinto capitolo}}.
+       %BEGIN of table
+       %Tabella 
+      \begin{center}
+        \bgroup
+        \def\arraystretch{1.8}
+        \begin{longtable}{ | l | p{2cm} | p{4.7cm} | p{2.5cm} |}
+        \hline
+        \textbf{Input} & \textbf{Output senza eccezioni}
+        & \textbf{Output atteso} \\ \hline
+        %consonante nasale seguita dalla consonante s
+        {\hyperref[exc:nasas]{i n s i s t i1 t a}} & i - n s i -  s t i1 - t a & i n - s i s - t i1 - t a \newline  \\ \hline
+        %consonante laterale seguita dalla consonante s:
+        {\hyperref[exc:lates]{r i v u l s i1 v a}} & r i - v u - l s i1 - v a & r i - v u l - s i1 - v a \newline  \\ \hline
+        %consonante occlusiva seguita da un’altra consonante occlusiva
+        {\hyperref[exc:occloccl]{a b d o1 tt i l i}} & a - b d o1 - tt i - l i & a b - d o1 - tt i - l i \newline  \\ \hline
+        %consonante occlusiva seguita da una consonante nasale
+        {\hyperref[exc:occlnasa]{s t i g m a t i1 ddz a}} & s t i - g m a - t i1 - ddz a & s t i g - m a - t i1 - ddz a \newline  \\ \hline
+        %consonanti approssimanti [g] adiacenti 
+        {\hyperref[exc:apprappr]{t r e ttS a j w O1 l o}} & t r e - ttS a j - w O1 - l o & t r e - ttS a - j w O1 - l o \newline  \\ \hline
+        \caption{Eccezioni per l'algoritmo di sillabificazione}
+        \end{longtable}
+        \egroup
+     \end{center}
+    %END of table
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Test di unità}
+Durante lo sviluppo sono stati realizzati alcuni \textit{test} di unità, scritti
+in linguaggio \textit{bash}. \\
+Gli \textit{script} di \textit{test} sono sempre composti da almeno tre \textit{test}:
+  \begin{enumerate}
+    \item un \textit{test} che termina \textbf{correttamente};
+    \item un \textit{test} che \textbf{fallisce};
+    \item un \textit{test} con \textit{output} \textbf{errato}.
+  \end{enumerate}
+A causa della loro importanza, alcuni \textit{test} sono stati scritti anche dal \textit{tutor} 
+aziendale e da altri elementi dell'azienda. \\
+La configurazione del \textit{file} \texttt{Makefile.am} permette di stabilire quali \textit{test} devono essere
+eseguiti. \\ Dopo l'esecuzione di \textit{automake} è possibile lanciare le batterie di test tramite il
+comando \texttt{make check}. \\
+Ogni \textit{test} è preceduto e seguito da due funzioni:
+\begin{itemize}
+  \item \texttt{test\_start}: viene invocata prima di ogni \textit{test} di unità
+                              con lo scopo di inizializzare le variabili utilizzate
+                              in seguito nel \textit{test};
+  \item \texttt{test\_end}:   controlla i risultati del \textit{test} e ripulisce l'ambiente
+                              di \textit{testing}.
+\end{itemize}

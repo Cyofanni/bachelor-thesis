@@ -1,0 +1,36 @@
+\documentclass[]{beamer}
+
+\usetheme{Warsaw} %theme
+
+\setbeamercolor{structure}{fg=red!90!black}
+
+\usepackage[utf8]{inputenc} %utf-8 input
+
+
+\title{Presentazione tesi di laurea}
+\author[Giovanni Mazzocchin]{\includegraphics[width=0.4\textwidth]{speect_logo_full.png}}
+\date{12-10-2016}
+\institute{Relazione di stage}
+
+\graphicspath{{res/img/}}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\setbeamercolor{footline}{fg=red}
+\setbeamerfont{footline}{series=\bfseries}
+
+\begin{document}
+\graphicspath{ {res/img/} }
+
+%\begin{frame}
+%  \tableofcontents
+%\end{frame}
+
+\input{res/listOfSlide}
+
+\end{document}
